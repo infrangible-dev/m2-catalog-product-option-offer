@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<!--
+ * @author      Andreas Knollmann
+ * @copyright   2014-2025 Softwareentwicklung Andreas Knollmann
+ * @license     http://www.opensource.org/licenses/mit-license.php MIT
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Infrangible_CatalogProductOptionOffer::infrangible_catalogproductoptionoffer" title="Product Option Offer" module="Infrangible_CatalogProductOptionOffer" sortOrder="1120" resource="Infrangible_CatalogProductOptionOffer::infrangible_catalogproductoptionoffer" parent="Infrangible_Foundation::menu"/>
+        <add id="Infrangible_CatalogProductOptionOffer::infrangible_catalogproductoptionoffer_manage" title="Manage" module="Infrangible_CatalogProductOptionOffer" sortOrder="10" resource="Infrangible_CatalogProductOptionOffer::infrangible_catalogproductoptionoffer" parent="Infrangible_CatalogProductOptionOffer::infrangible_catalogproductoptionoffer" action="product_option_offer/offer"/>
+    </menu>
+</config>

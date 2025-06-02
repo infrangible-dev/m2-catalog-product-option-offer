@@ -1,0 +1,79 @@
+<?php
+
+declare(strict_types=1);
+
+use Infrangible\CatalogProductOptionOffer\Block\Product\View\Options\Offer;
+use Magento\Checkout\Helper\Data;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\TemplateEngine\Php;
+
+/**
+ * @author      Andreas Knollmann
+ * @copyright   2014-2025 Softwareentwicklung Andreas Knollmann
+ * @license     http://www.opensource.org/licenses/mit-license.php MIT
+ */
+
+/** @var Php $this */
+/** @var Escaper $escaper */
+/** @var Offer $block */
+
+/** @var Data $checkoutHelper */
+$checkoutHelper = $this->helper(Data::class);
+
+/** @var \Magento\Catalog\Helper\Data $catalogHelper */
+$catalogHelper = $this->helper(\Magento\Catalog\Helper\Data::class);
+
+$offers = $block->getOffers();
+$product = $block->getProduct();
+$offerIds = $product->getPreconfiguredValues()->getData('offer');
+?>
+
+<?php if (count($offers)) :?>
+    <div class="fieldset catalog-product-option-offers">
+        <div class="field">
+            <label class="label">
+                <span><?= __('Offers'); ?></span>
+            </label>
+            <div class="control">
+                <div class="nested">
+                    <?php foreach ($offers as $offer): ?>
+                        <?php
+                        $offerPrice = $catalogHelper->getTaxPrice(
+                            $product,
+                            $offer->getPrice(),
+                            true
+                        );
+                        ?>
+                        <div class="field choice admin__field admin__field-option product-option-offer">
+                            <input type="checkbox" class="checkbox admin__control-checkbox" name="offer[]" id="offer_<?= $offer->getId(); ?>" value="<?= $offer->getId(); ?>" data-offer-id="<?= $offer->getId(); ?>" <?php if (is_array($offerIds) && in_array($offer->getId(), $offerIds)): ?>checked="checked"<?php endif; ?>>
+                            <label class="label admin__field-label" for="offer[<?= $offer->getId(); ?>]">
+                                <span><?= $offer->getName(); ?></span>
+                                <span class="price-notice">
+                                    +
+                                    <?= $escaper->escapeHtml($checkoutHelper->formatPrice($offerPrice), ['span']); ?>
+                                </span>
+                            </label>
+                            <div class="description"><?= $escaper->escapeHtml($offer->getDescription()); ?></div>
+                            <ul class="options">
+                                <?php foreach ($block->getOfferOptionNames($offer) as $optionData): ?>
+                                    <li><?= $escaper->escapeHtml($optionData['label']); ?><?php if ($optionData['value']): ?>: <?= $escaper->escapeHtml($optionData['value']); ?><?php endif; ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/x-magento-init">
+        {
+            "#product_addtocart_form": {
+                "Infrangible_CatalogProductOptionOffer/js/offer": {
+                    "offerConfig": <?= /* @noEscape */ $block->getOfferConfig(); ?>,
+                    "priceHolderSelector": "[data-product-id='<?= $escaper->escapeHtml($product->getId()); ?>'][data-role=priceBox]"
+                }
+            }
+        }
+    </script>
+<?php endif; ?>

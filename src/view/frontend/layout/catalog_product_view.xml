@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<!--
+ * @author      Andreas Knollmann
+ * @copyright   2014-2025 Softwareentwicklung Andreas Knollmann
+ * @license     http://www.opensource.org/licenses/mit-license.php MIT
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="product.info.options.wrapper">
+            <block class="Infrangible\CatalogProductOptionOffer\Block\Product\View\Options\Offer" name="product.info.options.offer" as="product_options_offer" template="Infrangible_CatalogProductOptionOffer::product/view/options/offer.phtml" before="product.info.options"/>
+        </referenceBlock>
+    </body>
+</page>

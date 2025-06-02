@@ -1,0 +1,72 @@
+/**
+ * @author      Andreas Knollmann
+ * @copyright   2014-2025 Softwareentwicklung Andreas Knollmann
+ * @license     http://www.opensource.org/licenses/mit-license.php MIT
+ */
+
+& when (@media-common = true) {
+    .catalog-product-option-offers {
+        .product-option-offer {
+            .description {
+                padding-left: 22px;
+            }
+
+            ul.options {
+                margin-top: 10px;
+                margin-bottom: 0;
+                font-size: 90%;
+
+                li {
+                    margin-bottom: 0;
+                }
+            }
+        }
+    }
+
+    tr.item-actions {
+        > td {
+            > div.actions-toolbar {
+                position: revert;
+                padding-bottom: 0;
+
+                table.item-offers {
+                    tr.item-offer {
+                        td.item-offer-name {
+                            font-weight: 700;
+                        }
+
+                        td.item-offer-options {
+                            dt {
+                                clear: left;
+                                float: left;
+                                margin: 0 10px 5px 0;
+
+                                &:after {
+                                    content: ': ';
+                                }
+                            }
+
+                            dd {
+                                display: inline-block;
+                                float: left;
+                                margin: 0 0 5px;
+                                word-break: break-all;
+                            }
+                        }
+
+                        td.item-offer-price {
+                            font-weight: 700;
+                            text-align: right;
+                        }
+                    }
+                }
+
+                table.item-offers + div.actions-toolbar {
+                    table.item-options {
+                        margin-top: 10px;
+                    }
+                }
+            }
+        }
+    }
+}
