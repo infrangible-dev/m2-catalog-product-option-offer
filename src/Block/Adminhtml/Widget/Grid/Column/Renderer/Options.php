@@ -59,16 +59,22 @@ class Options extends AbstractRenderer
                 $productOptionValues = $productOption->getValues();
 
                 if ($productOptionValues) {
-                    /** @var Option\Value $productOptionValue */
-                    foreach ($productOptionValues as $productOptionValue) {
-                        if ($option->getOptionId() == $productOptionValue->getOptionId() &&
-                            $option->getOptionValueId() == $productOptionValue->getOptionTypeId()) {
+                    if ($option->getOptionId() == $productOption->getId() && $option->getOptionValueId() === null) {
+                        if ($option->getOptionId() == $productOption->getOptionId()) {
+                            $optionsOutput[] = $productOption->getTitle();
+                        }
+                    } else {
+                        /** @var Option\Value $productOptionValue */
+                        foreach ($productOptionValues as $productOptionValue) {
+                            if ($option->getOptionId() == $productOptionValue->getOptionId() &&
+                                $option->getOptionValueId() == $productOptionValue->getOptionTypeId()) {
 
-                            $optionsOutput[] = sprintf(
-                                '%s: %s',
-                                $productOption->getTitle(),
-                                $productOptionValue->getTitle()
-                            );
+                                $optionsOutput[] = sprintf(
+                                    '%s: %s',
+                                    $productOption->getTitle(),
+                                    $productOptionValue->getTitle()
+                                );
+                            }
                         }
                     }
                 } else {

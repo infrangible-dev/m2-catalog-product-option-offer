@@ -169,10 +169,21 @@ class Data
                                     /** @var Value $productOptionValue */
                                     foreach ($productOptionValues as $productOptionValue) {
                                         if ($productOptionValue->getId() == $offerOptionValueId) {
-                                            $optionNames[ $productOption->getOptionId() ] = [
-                                                'label' => $productOption->getTitle(),
-                                                'value' => $productOptionValue->getTitle()
-                                            ];
+                                            if (array_key_exists(
+                                                $productOption->getOptionId(),
+                                                $optionNames
+                                            )) {
+                                                $optionNames[ $productOption->getOptionId() ][ 'value' ] = sprintf(
+                                                    '%s, %s',
+                                                    $optionNames[ $productOption->getOptionId() ][ 'value' ],
+                                                    $productOptionValue->getTitle()
+                                                );
+                                            } else {
+                                                $optionNames[ $productOption->getOptionId() ] = [
+                                                    'label' => $productOption->getTitle(),
+                                                    'value' => $productOptionValue->getTitle()
+                                                ];
+                                            }
                                         }
                                     }
                                 } else {
