@@ -71,13 +71,18 @@ class DefaultType
                                             $offerData
                                         )) {
                                             $offerOptionValue = $offerData[ $itemOptionId ];
+
+                                            if ($offerOptionValue == 0) {
+                                                return 0;
+                                            }
+
                                             $itemOptionValue = $itemOption->getValue();
 
                                             if (in_array(
                                                 $productOption->getType(),
                                                 ['drop_down', 'radio', 'select2']
                                             )) {
-                                                if ($offerOptionValue == 0 || $itemOptionValue == $offerOptionValue) {
+                                                if ($itemOptionValue == $offerOptionValue) {
                                                     return 0;
                                                 }
                                             } else {
@@ -86,11 +91,9 @@ class DefaultType
                                                     $itemOptionValue
                                                 );
 
-                                                if (! count(
-                                                    array_diff(
-                                                        $itemOptionValue,
-                                                        $offerOptionValue
-                                                    )
+                                                if (array_diff(
+                                                    $itemOptionValue,
+                                                    $offerOptionValue
                                                 )) {
                                                     return 0;
                                                 }

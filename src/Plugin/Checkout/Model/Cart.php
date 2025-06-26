@@ -7,6 +7,9 @@ namespace Infrangible\CatalogProductOptionOffer\Plugin\Checkout\Model;
 use FeWeDev\Base\Arrays;
 use FeWeDev\Base\Variables;
 use Infrangible\CatalogProductOptionOffer\Helper\Data;
+use Magento\Catalog\Api\Data\ProductCustomOptionInterface;
+use Magento\Catalog\Model\Product;
+use Magento\Catalog\Model\Product\Option\Value;
 use Magento\Framework\DataObject;
 use Magento\Framework\Serialize\Serializer\Json;
 
@@ -56,6 +59,48 @@ class Cart
                     foreach ($offerOptionData as $optionId => $optionValue) {
                         if ($optionValue != 0) {
                             $requestInfo[ 'options' ][ $optionId ] = $optionValue;
+                        } elseif ($productInfo instanceof Product) {
+                            $optionValueId = $this->arrays->getValue(
+                                $requestInfo,
+                                sprintf(
+                                    'options:%s',
+                                    $optionId
+                                )
+                            );
+
+                            if (! $this->variables->isEmpty($optionValueId)) {
+                                continue;
+                            }
+
+                            $productOption = $productInfo->getOptionById($optionId);
+
+                            $values = $productOption->getValues();
+
+                            if ($values) {
+                                $optionType = $productOption->getType();
+                                $isMultiple = $optionType === ProductCustomOptionInterface::OPTION_TYPE_CHECKBOX ||
+                                    $optionType === ProductCustomOptionInterface::OPTION_TYPE_MULTIPLE;
+
+                                $hasDefaultValue = false;
+
+                                /** @var Value $value */
+                                foreach ($values as $value) {
+                                    if ($value->getData('default') == 1) {
+                                        $requestInfo[ 'options' ][ $optionId ] =
+                                            $isMultiple ? [$value->getOptionTypeId()] : $value->getOptionTypeId();
+
+                                        $hasDefaultValue = true;
+                                        break;
+                                    }
+                                }
+
+                                if (! $hasDefaultValue) {
+                                    $value = reset($values);
+
+                                    $requestInfo[ 'options' ][ $optionId ] =
+                                        $isMultiple ? [$value->getOptionTypeId()] : $value->getOptionTypeId();
+                                }
+                            }
                         }
                     }
                 }
