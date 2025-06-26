@@ -198,7 +198,9 @@ class Offers extends Template
     {
         return $this->helper->getOfferOptionNames(
             $offer,
-            $this->getItem()->getProduct()
+            $this->getItem()->getProduct(),
+            $this->getItem(),
+            false
         );
     }
 }

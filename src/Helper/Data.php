@@ -11,6 +11,8 @@ use Infrangible\CatalogProductOptionOffer\Model\OfferFactory;
 use Infrangible\Core\Helper\Product;
 use Infrangible\Core\Helper\Stores;
 use Magento\Catalog\Model\Product\Option\Value;
+use Magento\Framework\DataObject;
+use Magento\Framework\EntityManager\EventManager;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Quote\Model\Quote\Item\AbstractItem;
 
@@ -36,18 +38,23 @@ class Data
     /** @var Variables */
     protected $variables;
 
+    /** @var EventManager */
+    protected $eventManager;
+
     public function __construct(
         OfferFactory $offerFactory,
         \Infrangible\CatalogProductOptionOffer\Model\ResourceModel\OfferFactory $offerResourceFactory,
         Stores $storeHelper,
         Product $productHelper,
-        Variables $variables
+        Variables $variables,
+        EventManager $eventManager
     ) {
         $this->offerFactory = $offerFactory;
         $this->offerResourceFactory = $offerResourceFactory;
         $this->storeHelper = $storeHelper;
         $this->productHelper = $productHelper;
         $this->variables = $variables;
+        $this->eventManager = $eventManager;
     }
 
     /**
@@ -116,7 +123,8 @@ class Data
     public function getOfferOptionNames(
         Offer $offer,
         \Magento\Catalog\Model\Product $product,
-        ?AbstractItem $item = null
+        ?AbstractItem $item = null,
+        bool $limitToSelected = true
     ): array {
         $optionNames = [];
 
@@ -129,7 +137,7 @@ class Data
                     $productOption = $product->getOptionById($offerOptionId);
 
                     if ($productOption) {
-                        if ($item) {
+                        if ($item && $limitToSelected) {
                             $itemOption = $item->getOptionByCode(
                                 sprintf(
                                     'option_%s',
@@ -160,6 +168,28 @@ class Data
                                 ];
                             }
                         } else {
+                            if ($item && $product->isComposite()) {
+                                $checkResult = new DataObject();
+                                $checkResult->setData(
+                                    'is_available',
+                                    true
+                                );
+
+                                $this->eventManager->dispatch(
+                                    'catalog_product_option_offer_composite_item_product_option_available',
+                                    [
+                                        'item'           => $item,
+                                        'product'        => $product,
+                                        'product_option' => $productOption,
+                                        'result'         => $checkResult
+                                    ]
+                                );
+
+                                if (! $checkResult->getData('is_available')) {
+                                    continue;
+                                }
+                            }
+
                             $productOptionValues = $productOption->getValues();
 
                             if ($productOptionValues) {

@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<!--
+ * @author      Andreas Knollmann
+ * @copyright   Copyright (c) 2014-2025 Softwareentwicklung Andreas Knollmann
+ * @license     http://www.opensource.org/licenses/mit-license.php MIT
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="quote.item.bundle.products.before">
+            <block class="Infrangible\CatalogProductOptionOffer\Block\Quote\Item\Bundle\Products\Offer" name="quote.item.bundle.products.offer" template="Infrangible_CatalogProductOptionOffer::quote/item/bundle/products/offer.phtml"/>
+        </referenceContainer>
+    </body>
+</page>
